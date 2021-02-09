@@ -19,6 +19,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -86,10 +87,14 @@ public class RegisterActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
 
-                            if(task.isSuccessful()){
+                            if(task.isSuccessful())
+                            {
+                                String deviceToken= String.valueOf(FirebaseMessaging.getInstance().getToken());
 
                                 String currentUserID= mAuth.getCurrentUser().getUid();
-                                rootRef.child("users").child(currentUserID).setValue("");
+                                rootRef.child("users").child(currentUserID).child("device_token").setValue(deviceToken);
+
+
 
                                 SendUserToMainActivity();
                                 Toast.makeText(RegisterActivity.this, "Account Created Successfully", Toast.LENGTH_SHORT).show();
